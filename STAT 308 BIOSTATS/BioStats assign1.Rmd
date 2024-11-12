@@ -1,0 +1,240 @@
+---
+title: "Biostats Assignment 1"
+author: "Kabo Letsogo"
+date: "11 March 2024"
+output:
+  pdf_document: default
+---
+
+Question 1 imports
+
+```{r}
+library(moments)
+library(tidyverse)
+require(lattice)
+file_path <- "STAT 308 BIOSTATS/lead-iq.txt"
+iq_data <- read.table(file_path, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+iq_data$Smelter <- as.factor(iq_data$Smelter)
+iq_data$IQ <- as.numeric(iq_data$IQ)
+iq_data$IQ[is.na(iq_data$IQ)] <- mean(iq_data$IQ)
+```
+
+```{r}
+# Correct the file path relative to the current working directory
+file_path <- "STAT 308 BIOSTATS/lead-iq.txt"
+
+# Read the file using read.table with the correct path
+iq_data <- read.table(file_path, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+
+#
+```
+
+```{r}
+str(iq_data)
+```
+
+Q1a : Make a table listing the mean, 1st quartile, 2nd quartile, 3rd quartile, skewness, Kurtosis, and standard deviation for each group.
+
+```{r}
+iq_data%>%group_by(Smelter)%>%
+  summarise(
+    mean = mean(IQ),
+    Q1 = quantile(IQ,0.25),
+    Q2 = quantile(IQ,0.5),
+    Q3 = quantile(IQ,0.75),
+    Skewness = skewness(IQ),
+    Kurtosis = kurtosis(IQ),
+    Std_Dev = sd(IQ) 
+  )
+```
+
+b)  Create a histogram for each group.
+
+```{r}
+ggplot(data = iq_data,aes(x=IQ))+
+  geom_histogram(bins=10)+
+  facet_grid('Smelter')
+```
+
+c)  Create box plots comparing the distribution of IQ between the two groups. Does living close to the smelter appear to be harmful to the neuro- logical development of children?
+
+```{r}
+ggplot(data = iq_data,aes(x=IQ))+
+  geom_boxplot()+
+  facet_grid('Smelter')
+```
+
+```         
+The desc and the plots seem to suggest that ...
+```
+
+```         
+NB: Assuming serum cholesterol levels are normally distributed and therefore their sampling distribution is also normally distributed with mean 211 mg/dl, and a standard deviation of 46 mg/dl
+
+Q2(a):What is the probability that our sample average will be above 230mg/dl?
+```
+
+```{r}
+mean <- 211  # population mean
+std_dev <- 46  # population standard deviation
+n <- 10  # sample size
+
+SE <- std_dev / sqrt(n) #Standard_Error
+t_score <- (230 - mean) / SE
+df <- n - 1
+p_abv_230 <- 1 - pt(t_score, df)
+p_abv_230
+```
+
+```         
+2b
+```
+
+```{r}
+1 - pnorm(230, mean, std_dev)
+```
+
+```         
+# c) 95% Confidence interval for our sample averages
+```
+
+```{r}
+
+a <- 0.05
+t_crit <- qt(1 - a/2, df)
+margin_of_error <- t_crit * SE
+ci_lower <- mean - margin_of_error
+ci_upper <- mean + margin_of_error
+c(ci_lower,ci_upper)
+```
+
+```         
+2d) Width of the interval
+```
+
+```{r}
+ci_width <- ci_upper - ci_lower
+ci_width
+```
+
+```         
+e) How large would the sample size need to be in order to ensure a 95%
+probability that the sample average will be within 5 mg/dl of the population
+mean?
+```
+
+```         
+z_0.025 = 1.96,w=5,sigma=46
+```
+
+```{r}
+n1 <- ((1.96*46)/5)^2
+n1
+
+```
+
+```         
+Therefore minimun people needed is 326
+```
+
+```         
+f) How large would the sample size need to be in order to ensure a 90%
+probability that the sample average will be within 5 mg/dl of the population
+mean?
+```
+
+```{r}
+n2 <- ((1.645*46)/5)^2
+n2
+
+```
+
+```         
+Therefore minimun people needed is 230
+```
+
+```         
+Q3 : In a six-sided dice, a 1 is called an ace. What is the probability of rolling 24 pairs of dice and getting at least one double-ace?
+```
+
+```         
+Assuming fair , p=1/6 , n = 24 trials ,P(X>=1) == 1 - P(X=0)
+```
+
+```{r}
+atleast_1_one_dice <- 1 - dbinom(x=0, size=24, prob=(1/6))
+atleast_1_one_dice
+```
+
+```         
+Q4a) Predict the educational level of a woman (X') whose husband has completed 18 years of schooling (Y)
+```
+
+```{r}
+mean_X <- 12    # Mean education level for wives
+SD_X <- 3       # SD of education level for wives
+mean_Y <- 12.5  # Mean education level for husbands
+SD_Y <- 2.5     # SD of education level for husbands
+r <- 0.5        # Correlation coefficient
+
+z_Y <- (18 - mean_Y) / SD_Y
+z_X <- r * z_Y
+# Unstandardize to get the predicted value of X
+X_pred <- mean_X + z_X * SD_X
+X_pred
+```
+
+```         
+4b) Predict the educational level of a man (Y') whose wife has completed 15 years of schooling (X)
+```
+
+```{r}
+z_X <- (15 - mean_X) / SD_X
+z_Y <- r * z_X
+# Unstandardize to get the predicted value of Y
+Y_pred <- mean_Y + z_Y * SD_Y
+Y_pred
+```
+
+```         
+Q5
+
+The study obtained an intercept of 55 and a slope of 2.2 per
+condition.
+a) What is the predicted quality of care for a patient with no chronic
+conditions?
+```
+
+```{r}
+
+```
+
+```         
+b) What is the predicted quality of care for a patient with 2 chronic
+conditions?
+```
+
+```{r}
+
+```
+
+```         
+c) The correlation between quality of care and number of chronic condi-
+tions (i) is positive (ii) is negative (iii) could be either positive or negative –
+it is impossible to tell from the information given
+```
+
+```{r}
+
+```
+
+```         
+d) You do not have enough information to calculate the correlation co-
+efficient from the slope of the regression line. What additional information
+would you need to calculate it?
+2
+```
+
+```{r}
+
+```

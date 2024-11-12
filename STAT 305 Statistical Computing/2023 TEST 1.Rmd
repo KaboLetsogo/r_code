@@ -1,0 +1,74 @@
+---
+title: "Biostats Assignment 1"
+author: "Kabo & Kitso"
+date: "25 March 2024"
+output:
+  pdf_document: default
+---
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(readr)
+Titanic <- read_csv("C:/Users/Kabo Letsogo/Documents/R Lectures sem6/STAT 305 Statistical Computing/Titanic.csv")
+str(Titanic)
+```
+
+```{r echo=TRUE}
+Titanic$PClass<-as.factor(Titanic$PClass)
+Titanic$Sex<-as.factor(Titanic$Sex)
+Titanic$Survived<-as.factor(Titanic$Survived)
+Titanic$Age<-as.integer(Titanic$Age)
+str(Titanic)
+```
+
+```{r}
+ggplot(Titanic, aes(fill=Survived,x=PClass)) + 
+    geom_bar(position="dodge") +theme_bw()
+```
+
+```         
+1b) Generally, the higher(1st being highest) a persons class they were more likely to survive and that if one was in 3rd class one was more likely to not survive as compared to the 1st 2 classes where the proportion of those who survived to those who died were relatively the same 
+```
+
+```{r}
+First.Males <- Titanic%>%filter(Sex=='male',PClass=='1st')
+First.Males
+```
+
+```{r}
+chisq.test(y=Titanic$PClass,x=Titanic$Survived)
+```
+
+```         
+H_0 : Survival is independent of Passenger Class
+H_a : Survival is dependent on Passenger Class
+
+p-value is less than 0.05 and thus we reject the null hypothesis as there is sufficient evidence to conclude that survival is dependent on Passenger Class
+```
+
+```{r}
+Titanic%>%group_by(Survived,Sex)%>%count()
+```
+
+```{r}
+prop_surv_males <- 142/(308+142)
+prop_surv_males
+```
+
+```{r}
+Titanic%>%group_by(Survived,PClass)%>%count()
+```
+
+```{r}
+prop_surv_third <- 138/(193+119+138)
+prop_surv_third
+```
+
+```{r}
+table(Titanic$Sex,Titanic$PClass)
+```
+
+```{r}
+#res <- t.test(data$before, after, paired = TRUE)
+```
