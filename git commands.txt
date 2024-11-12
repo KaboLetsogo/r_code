@@ -5,6 +5,8 @@ git commit -m "Describe the changes you made"
 git push
 
 
+# pulling down updates from github to here
+git pull
 
-
+#r console command that seems might help alot
 setwd("~/r_code")
