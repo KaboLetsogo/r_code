@@ -31,7 +31,7 @@ hotelling_test <- function(sample_mean, hypothesized_mean, cov_matrix, n) {
   
   
   # Compute the F-statistic
-  f_stat <- (df2 / (p * (n - 1))) * t2_stat
+  #f_stat <- (df2 / (p * (n - 1))) * t2_stat
   #f_stat <- t2_stat
   
   # Critical value for F distribution
@@ -40,9 +40,6 @@ hotelling_test <- function(sample_mean, hypothesized_mean, cov_matrix, n) {
   
   # Decision
   decision <- ifelse(t2_stat > f_crit, "Reject H0", "Fail to reject H0")
-  ###MY ADDITION
-  #decision <- ifelse(f_stat > f_crit, "Reject H0", "Fail to reject H0")
-  
   
   return(list(T2 = t2_stat,  F_critical = f_crit, decision = decision))
 }

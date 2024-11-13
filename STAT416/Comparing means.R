@@ -1,6 +1,6 @@
 # Load necessary library
 library(knitr)
-library(tidyverse)
+
 # Create the data as a matrix or data frame
 effluent_data <- data.frame(
   Sample = 1:11,
@@ -10,10 +10,9 @@ effluent_data <- data.frame(
   State_Lab_SS = c(15, 13, 22, 29, 31, 64, 30, 64, 56, 20, 21)
 )
 
-
-effluent_data <- mutate(effluent_data,D_BOD = Commercial_Lab_BOD-State_Lab_BOD,
-                          D_SS = Commercial_Lab_SS - State_Lab_SS)
-
-
-covMat = cov(dplyr::select(effluent_data,D_BOD,D_SS))
-covMat
+# Print the table using kable
+kable(effluent_data, 
+      col.names = c("Sample", "Commercial Lab (BOD)", "Commercial Lab (SS)", 
+                    "State Lab (BOD)", "State Lab (SS)"), 
+      caption = "Effluent Data",
+      align = "c")
