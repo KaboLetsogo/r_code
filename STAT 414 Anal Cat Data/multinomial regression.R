@@ -1,6 +1,6 @@
 # Example: Wheat kernels
 library(readr)
-Wheat <- read_csv("STAT 414 Anal Cat Data/Wheat.csv")
+wheat <- read_csv("STAT 414 Anal Cat Data/Wheat.csv")
 head(wheat, n = 3)  # n argument gives the number of rows to print
 tail(wheat, n = 3)
 
