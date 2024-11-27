@@ -12,10 +12,10 @@ summary(mod_fit)
 
 mod_fit2 <- glm( formula = good ~ change + distance ,
                 family =binomial ( link = logit ), data = placekick )
-#mod_fit2$Coefficients
+mod_fit2$Coefficients
 
 #round(summary (mod_fit) $coefficients ,4)
-#vcov(mod_fit) #Variance covariance matrix
+vcov(mod_fit) #Variance covariance matrix
 summary(mod_fit2)
 
 mod_fit3 <- glm( formula = good ~ PAT + distance ,
